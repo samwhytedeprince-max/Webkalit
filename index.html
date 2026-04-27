@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEBKAL — Python-Powered Innovation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  :root {
+    --black: #080808;
+    --dark: #0e0e0e;
+    --surface: #141414;
+    --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.15);
+    --white: #f5f5f0;
+    --muted: rgba(245,245,240,0.45);
+    --accent: #e8e8e8;
+    --highlight: #ffffff;
+    --mono: 'DM Mono', monospace;
+    --display: 'Bebas Neue', cursive;
+    --body: 'Syne', sans-serif;
+  }
+ 
+  html { scroll-behavior: smooth; }
+ 
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: pointer;
+  }
+ 
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 10px; height: 10px;
+    background: white;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+
+ 
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.5rem 3rem;
+    backdrop-filter: blur(20px);
+    background: rgba(8,8,8,0.85);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--white);
+    text-decoration: none;
+    padding: 0.55rem 1.4rem;
+    border: 1px solid var(--white);
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { background: transparent; color: var(--white); }
+ 
+  /* SECTIONS */
+  section { padding: 7rem 3rem; }
+ 
+  .container { max-width: 1280px; margin: 0 auto; }
+ 
+  /* ---- HERO ---- */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+  }
+  .hero-vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 80%, transparent 30%, rgba(8,8,8,0.95) 75%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 40px; height: 1px; background: rgba(255,255,255,0.25);
+  }
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(5rem, 13vw, 13rem);
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    position: relative;
+  }
+  .hero-title span {
+    display: block;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.25);
+    color: transparent;
+  }
+  .hero-sub {
+    max-width: 440px;
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-top: 2rem;
+    position: relative;
+  }
+  .hero-actions {
+    display: flex; gap: 1rem; margin-top: 2.5rem; position: relative;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--white);
+    color: var(--black);
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    border: 1px solid var(--white);
+    transition: all 0.25s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: transparent; color: var(--white); }
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--white);
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    border: 1px solid var(--border-bright);
+    transition: all 0.25s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--white); }
+  .hero-scroll {
+    position: absolute; right: 3rem; bottom: 5rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+  }
+  .hero-scroll::after {
+    content: '';
+    width: 1px; height: 60px;
+    background: linear-gradient(transparent, rgba(255,255,255,0.3));
+    display: block;
+  }
+ 
+  /* ---- STATS ---- */
+  #stats {
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat-item {
+    padding: 2rem 3rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--display);
+    font-size: 3.5rem;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    display: block;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+ 
+  /* ---- SERVICES ---- */
+  #services { background: var(--black); }
+  .section-header {
+    margin-bottom: 5rem;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2rem;
+  }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--white);
+  }
+  .section-subtitle {
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 320px;
+    text-align: right;
+  }
+ 
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+  .service-card {
+    background: var(--black);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .service-card:hover { background: var(--surface); }
+  .service-num {
+    font-family: var(--display);
+    font-size: 4rem;
+    color: rgba(255,255,255,0.04);
+    position: absolute;
+    top: 1.5rem; right: 2rem;
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.3s;
+  }
+  .service-card:hover .service-num { color: rgba(255,255,255,0.07); }
+  .service-icon {
+    width: 42px; height: 42px;
+    border: 1px solid var(--border-bright);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+  .service-name {
+    font-family: var(--body);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+  }
+  .service-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .service-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.65rem;
+  }
+  .service-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .service-link:hover { border-color: var(--white); }
+ 
+  /* ---- PORTFOLIO ---- */
+  #portfolio { background: var(--surface); }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 0;
+  }
+  .portfolio-item {
+    background: var(--surface);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .portfolio-item:hover { background: var(--surface2); }
+  .portfolio-item.large { grid-column: span 8; }
+  .portfolio-item.small { grid-column: span 4; }
+  .portfolio-item.half { grid-column: span 6; }
+  .portfolio-visual {
+    width: 100%; aspect-ratio: 16/9;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .portfolio-visual-inner {
+    width: 85%; height: 75%;
+    background: var(--black);
+    border: 1px solid var(--border-bright);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .portfolio-visual-label {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.12);
+    text-align: center;
+    padding: 1rem;
+  }
+  .portfolio-cat {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .portfolio-name {
+    font-family: var(--body);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .portfolio-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .portfolio-tags { display: flex; gap: 0.4rem; margin-top: 1rem; flex-wrap: wrap; }
+ 
+  /* Portfolio Builder spotlight */
+  .portfolio-spotlight {
+    grid-column: span 12;
+    background: var(--surface2);
+    padding: 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 3rem;
+  }
+  .spotlight-text {}
+  .spotlight-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .spotlight-title {
+    font-family: var(--display);
+    font-size: 3rem;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .spotlight-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.7;
+  }
+ 
+  /* ---- TEAM ---- */
+  #team { background: var(--black); }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 4rem;
+  }
+  .team-card {
+    background: var(--black);
+    padding: 3rem 2rem;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .team-card:hover { background: var(--surface); }
+  .team-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border-bright);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display);
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+  .team-name {
+    font-family: var(--body);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+  }
+  .team-role {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .team-title {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  .team-bio {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+  }
+  .team-join {
+    grid-column: span 4;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--black);
+  }
+  .team-join a {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .team-join a:hover { color: var(--white); }
+  .team-join a::after { content: '→'; }
+ 
+  /* ---- TESTIMONIALS ---- */
+  #testimonials { background: var(--surface); }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 4rem;
+  }
+  .testimonial-card {
+    background: var(--surface);
+    padding: 3rem;
+    transition: background 0.3s;
+  }
+  .testimonial-card:hover { background: var(--surface2); }
+  .testimonial-quote {
+    font-size: 0.95rem;
+    color: var(--white);
+    line-height: 1.75;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .testimonial-quote::before {
+    content: '"';
+    font-family: var(--display);
+    font-size: 5rem;
+    color: rgba(255,255,255,0.06);
+    position: absolute;
+    top: -1.5rem; left: -0.5rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+  .testimonial-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border-bright);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display);
+    font-size: 1rem;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .testimonial-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--white);
+  }
+  .testimonial-title {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .brand-strip {
+    display: flex; align-items: center; justify-content: center;
+    gap: 3rem;
+    padding: 3rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .brand-name {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.18);
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .brand-name:hover { color: rgba(255,255,255,0.5); }
+ 
+  /* ---- FAQ ---- */
+  #faq { background: var(--black); }
+  .faq-list { margin-top: 4rem; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 1.75rem 0;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: color 0.2s;
+  }
+  .faq-q:hover { color: var(--accent); }
+  .faq-q span.icon {
+    font-size: 1.2rem;
+    color: var(--muted);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-q span.icon { transform: rotate(45deg); }
+  .faq-a {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.75;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.3s;
+    padding-bottom: 0;
+  }
+  .faq-item.open .faq-a {
+    max-height: 400px;
+    padding-bottom: 1.75rem;
+  }
+  .faq-cta {
+    margin-top: 3rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .faq-cta a {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .faq-cta a:hover { color: var(--white); }
+ 
+  /* ---- CONTACT CTA ---- */
+  #contact {
+    background: var(--surface);
+    text-align: center;
+    padding: 10rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #contact::before {
+    content: 'WEBKAL';
+    font-family: var(--display);
+    font-size: 22vw;
+    color: rgba(255,255,255,0.02);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .contact-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    display: block;
+  }
+  .contact-headline {
+    font-family: var(--display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .contact-sub {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    position: relative;
+  }
+  .contact-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+ 
+  /* ---- FOOTER ---- */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 5rem 3rem 3rem;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 4rem;
+    padding-bottom: 4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand {}
+  .footer-logo {
+    font-family: var(--display);
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .footer-tagline {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+    max-width: 280px;
+  }
+  .footer-socials { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .social-link {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .social-link:hover { color: var(--white); border-color: var(--border-bright); }
+  .footer-col-title {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 0.75rem; }
+  .footer-links a {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--white); }
+  .footer-contact-item {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0.75rem;
+    display: block;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-contact-item:hover { color: var(--white); }
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .footer-love {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+ 
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+ 
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 1.5rem; }
+    #hero { padding: 0 1.5rem 4rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .section-subtitle { text-align: left; }
+    .services-grid { grid-template-columns: 1fr; }
+    .portfolio-item.large, .portfolio-item.small, .portfolio-item.half { grid-column: span 12; }
+    .portfolio-spotlight { flex-direction: column; padding: 2.5rem; }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-join { grid-column: span 2; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  }
+  @media (max-width: 600px) {
+    .hero-title { font-size: 4rem; }
+    .team-grid { grid-template-columns: 1fr; }
+    .team-join { grid-column: span 1; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+ 
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+ 
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">WEBKAL</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#testimonials">Clients</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hire Us</a>
+</nav>
+ 
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-eyebrow reveal">Python-Powered Innovation</div>
+  <h1 class="hero-title reveal">
+    We Build<br>
+    <span>Digital</span>
+    Experiences
+  </h1>
+  <p class="hero-sub reveal">A Python-powered agency crafting responsive websites, business bots, and digital tools that drive growth and efficiency.</p>
+  <div class="hero-actions reveal">
+    <a href="#contact" class="btn-primary">Hire Us</a>
+    <a href="#services" class="btn-ghost">Explore Services</a>
+    <a href="#portfolio" class="btn-ghost">Learning Hub</a>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+ 
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <span class="stat-num">7+</span>
+      <span class="stat-label">Team Members</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-num">4+</span>
+      <span class="stat-label">Projects Delivered</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-num">5+</span>
+      <span class="stat-label">Services Offered</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-num">100+</span>
+      <span class="stat-label">Hours of Expertise</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <span class="section-tag">What We Do</span>
+        <h2 class="section-title">Our Services</h2>
+      </div>
+      <p class="section-subtitle">Innovative solutions for modern businesses</p>
+    </div>
+ 
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="service-num">01</span>
+        <div class="service-icon">⬡</div>
+        <h3 class="service-name">Web Development</h3>
+        <p class="service-desc">Responsive, attractive websites built with cutting-edge technologies. From landing pages to full web applications.</p>
+        <div class="service-tags">
+          <span class="tag">React</span>
+          <span class="tag">Next.js</span>
+          <span class="tag">Flask</span>
+          <span class="tag">Django</span>
+        </div>
+      </div>
+ 
+      <div class="service-card reveal">
+        <span class="service-num">02</span>
+        <div class="service-icon">⬡</div>
+        <h3 class="service-name">Telegram Bots</h3>
+        <p class="service-desc">Custom business automation bots to streamline operations, engage customers, and boost efficiency.</p>
+        <div class="service-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Telegram API</span>
+        </div>
+        <a href="#contact" class="service-link">Try our bot →</a>
+      </div>
+ 
+      <div class="service-card reveal">
+        <span class="service-num">03</span>
+        <div class="service-icon">⬡</div>
+        <h3 class="service-name">UI/UX Design</h3>
+        <p class="service-desc">Beautiful, user-centered designs that combine aesthetics with functionality for optimal user experience.</p>
+        <div class="service-tags">
+          <span class="tag">Figma</span>
+          <span class="tag">Adobe XD</span>
+        </div>
+      </div>
+ 
+      <div class="service-card reveal">
+        <span class="service-num">04</span>
+        <div class="service-icon">⬡</div>
+        <h3 class="service-name">Udemy Partnerships</h3>
+        <p class="service-desc">Curated Python courses from top instructors. We promote quality content for enthusiasts and professionals.</p>
+        <div class="service-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Courses</span>
+        </div>
+        <a href="#portfolio" class="service-link">Explore Courses →</a>
+      </div>
+ 
+      <div class="service-card reveal">
+        <span class="service-num">05</span>
+        <div class="service-icon">⬡</div>
+        <h3 class="service-name">Maintenance & SEO</h3>
+        <p class="service-desc">Keep your website optimized, secure, and ranking high. Ongoing support and performance optimization.</p>
+        <div class="service-tags">
+          <span class="tag">SEO</span>
+          <span class="tag">Analytics</span>
+          <span class="tag">Security</span>
+        </div>
+      </div>
+ 
+      <div class="service-card reveal" style="background: var(--surface2); display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
+        <p style="font-family: var(--display); font-size: 2.5rem; color: var(--white); line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: 0.03em;">READY TO<br>BUILD?</p>
+        <a href="#contact" class="btn-primary">Start a Project</a>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <span class="section-tag">Our Work</span>
+        <h2 class="section-title">Portfolio</h2>
+      </div>
+      <p class="section-subtitle">Real projects, real results</p>
+    </div>
+ 
+    <div class="portfolio-grid">
+      <div class="portfolio-item large reveal">
+        <div class="portfolio-visual">
+          <div class="portfolio-visual-inner">
+            <span class="portfolio-visual-label">WORLD STORY STREAM</span>
+          </div>
+        </div>
+        <p class="portfolio-cat">Content Platform</p>
+        <h3 class="portfolio-name">World Story Stream</h3>
+        <p class="portfolio-desc">Interactive storytelling platform with engaging UI and dynamic content delivery.</p>
+        <div class="portfolio-tags">
+          <span class="tag">React</span>
+          <span class="tag">Tailwind</span>
+          <span class="tag">Vercel</span>
+        </div>
+      </div>
+ 
+      <div class="portfolio-item small reveal">
+        <div class="portfolio-visual">
+          <div class="portfolio-visual-inner">
+            <span class="portfolio-visual-label">COZY CAFÉ CORNER</span>
+          </div>
+        </div>
+        <p class="portfolio-cat">Restaurant Website</p>
+        <h3 class="portfolio-name">Cozy Café Corner</h3>
+        <p class="portfolio-desc">Warm, inviting café website with menu showcase.</p>
+        <div class="portfolio-tags">
+          <span class="tag">React</span>
+          <span class="tag">CSS</span>
+        </div>
+      </div>
+ 
+      <div class="portfolio-item half reveal">
+        <div class="portfolio-visual">
+          <div class="portfolio-visual-inner">
+            <span class="portfolio-visual-label">CANADIAN BEST</span>
+          </div>
+        </div>
+        <p class="portfolio-cat">Restaurant Website</p>
+        <h3 class="portfolio-name">Restaurant Canadian Best</h3>
+        <p class="portfolio-desc">Professional restaurant web presence.</p>
+        <div class="portfolio-tags">
+          <span class="tag">React</span>
+          <span class="tag">Responsive</span>
+        </div>
+      </div>
+ 
+      <div class="portfolio-item half reveal" style="background: var(--surface2);">
+        <p class="portfolio-cat">SaaS Tool</p>
+        <h3 class="portfolio-name" style="font-size: 1.6rem; margin-bottom: 1rem;">Portfolio Builder</h3>
+        <p class="portfolio-desc" style="margin-bottom: 1.5rem;">Free tool for creating professional portfolio websites — no coding required, no sign-up needed.</p>
+        <div class="portfolio-tags" style="margin-bottom: 2rem;">
+          <span class="tag">React</span>
+          <span class="tag">Builder Interface</span>
+        </div>
+        <a href="#contact" class="btn-primary">Launch Builder</a>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- TEAM -->
+<section id="team">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <span class="section-tag">Our People</span>
+        <h2 class="section-title">Meet the Core Team</h2>
+      </div>
+      <p class="section-subtitle">The innovators behind WEBKAL</p>
+    </div>
+ 
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-avatar">QO</div>
+        <p class="team-name">Quincy Omoruyi</p>
+        <p class="team-role">CEO & Founder</p>
+        <p class="team-title">Offensive Security Specialist</p>
+        <p class="team-bio">Visionary leader specializing in offensive security, penetration testing, and secure systems architecture.</p>
+        <div class="service-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Security</span>
+          <span class="tag">Pen Testing</span>
+        </div>
+      </div>
+ 
+      <div class="team-card reveal">
+        <div class="team-avatar">SK</div>
+        <p class="team-name">Shahzaib Khan</p>
+        <p class="team-role">Full-Stack Developer</p>
+        <p class="team-title">Database Architect</p>
+        <p class="team-bio">Database specialist ensuring data integrity and optimal performance across all systems.</p>
+        <div class="service-tags">
+          <span class="tag">PHP</span>
+          <span class="tag">MySQL</span>
+          <span class="tag">React</span>
+        </div>
+      </div>
+ 
+      <div class="team-card reveal">
+        <div class="team-avatar">MG</div>
+        <p class="team-name">Mokenyu Atsimbom Gwe</p>
+        <p class="team-role">Backend Developer</p>
+        <p class="team-title">Python & API Specialist</p>
+        <p class="team-bio">Expert in Flask, Django, and FastAPI. Builds robust backend systems and scalable APIs.</p>
+        <div class="service-tags">
+          <span class="tag">Flask</span>
+          <span class="tag">Django</span>
+          <span class="tag">FastAPI</span>
+        </div>
+      </div>
+ 
+      <div class="team-card reveal">
+        <div class="team-avatar">SO</div>
+        <p class="team-name">Sammy Obioma</p>
+        <p class="team-role">Developer</p>
+        <p class="team-title">Full-Stack Developer</p>
+        <p class="team-bio">Dedicated developer contributing to scalable web solutions across the full stack.</p>
+        <div class="service-tags">
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">Python</span>
+        </div>
+      </div>
+ 
+      <div class="team-join">
+        <a href="#contact">Join Our Team</a>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <span class="section-tag">Client Stories</span>
+        <h2 class="section-title">Trusted by Innovators</h2>
+      </div>
+      <p class="section-subtitle">Don't just take our word for it</p>
+    </div>
+ 
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <p class="testimonial-quote">WEBKAL transformed our online presence completely. Their attention to detail and innovative approach gave us a website that truly stands out in our industry.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">AJ</div>
+          <div>
+            <p class="testimonial-name">Adebayo Johnson</p>
+            <p class="testimonial-title">CEO, TechNova Solutions</p>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="testimonial-card reveal">
+        <p class="testimonial-quote">The Telegram bot they built for us automated 80% of our customer inquiries. Our response time dropped from hours to seconds. Incredible work!</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">SM</div>
+          <div>
+            <p class="testimonial-name">Sarah Mitchell</p>
+            <p class="testimonial-title">Founder, GreenLeaf Startups</p>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="testimonial-card reveal">
+        <p class="testimonial-quote">Professional, creative, and fast. WEBKAL delivered our dashboard project ahead of schedule with features we didn't even think to ask for.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">EO</div>
+          <div>
+            <p class="testimonial-name">Emmanuel Okafor</p>
+            <p class="testimonial-title">CTO, DataPulse Africa</p>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="testimonial-card reveal">
+        <p class="testimonial-quote">Working with WEBKAL felt like having an extension of our own team. They understood our vision from day one and delivered beyond expectations.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">LC</div>
+          <div>
+            <p class="testimonial-name">Lisa Chen</p>
+            <p class="testimonial-title">Product Manager, CloudSync</p>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="brand-strip">
+      <span class="brand-name">TechNova</span>
+      <span class="brand-name">GreenLeaf</span>
+      <span class="brand-name">DataPulse</span>
+      <span class="brand-name">CloudSync</span>
+      <span class="brand-name">Vizume</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- FAQ -->
+<section id="faq">
+  <div class="container" style="max-width: 820px;">
+    <div class="section-header reveal">
+      <div>
+        <span class="section-tag">FAQ</span>
+        <h2 class="section-title">Frequently Asked</h2>
+      </div>
+    </div>
+ 
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What services does WEBKAL offer?
+          <span class="icon">+</span>
+        </button>
+        <p class="faq-a">WEBKAL offers web development (React, Next.js, Flask, Django), custom Telegram bots for business automation, UI/UX design, Udemy course partnerships, and ongoing maintenance & SEO services.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How does your Telegram bot service work?
+          <span class="icon">+</span>
+        </button>
+        <p class="faq-a">We build and host Telegram bots on our servers. Customers choose a package (Starter $50, Pro $100, Premium $150–$200), pay via Paystack, and get access to a fully operational bot. You get the automation — we handle the infrastructure.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What are your pricing packages?
+          <span class="icon">+</span>
+        </button>
+        <p class="faq-a">Our productized bot packages start at $50 (Starter), $100 (Pro), and $150–$200 (Premium). Custom web development projects are quoted based on scope. We accept payments via Paystack and are globally accessible.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How long does a project take?
+          <span class="icon">+</span>
+        </button>
+        <p class="faq-a">Timelines vary by project complexity. Bot packages are typically delivered within 3–7 business days. Web development projects range from 1–6 weeks depending on scope. We prioritize quality without compromising speed.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do you provide ongoing support?
+          <span class="icon">+</span>
+        </button>
+        <p class="faq-a">Yes. We offer maintenance & SEO packages to keep your digital products optimized, secure, and performing well. For bot clients, hosting and uptime management is included in your package.</p>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Where is WEBKAL based?
+          <span class="icon">+</span>
+        </button>
+        <p class="faq-a">WEBKAL operates as a global remote team. We work with clients worldwide and accept payments in USD via Paystack. Reach us at webkalhub@gmail.com or via Telegram at @webkal_bot.</p>
+      </div>
+    </div>
+ 
+    <div class="faq-cta reveal">
+      <span style="font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--muted);">Still have questions?</span>
+      <a href="mailto:webkalhub@gmail.com">Contact us →</a>
+    </div>
+  </div>
+</section>
+ 
+<!-- CONTACT CTA -->
+<section id="contact">
+  <span class="contact-eyebrow reveal">Ready When You Are</span>
+  <h2 class="contact-headline reveal">Let's Build<br>Something<br>Extraordinary</h2>
+  <p class="contact-sub reveal">Drop us a line. We'll respond faster than you'd expect.</p>
+  <div class="contact-actions reveal">
+    <a href="mailto:webkalhub@gmail.com" class="btn-primary">Hire Us</a>
+    <a href="https://t.me/webkal_bot" class="btn-ghost">Telegram Us</a>
+    <a href="#portfolio" class="btn-ghost">Learning Hub</a>
+  </div>
+</section>
+ 
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="footer-logo">WEBKAL</span>
+      <p class="footer-tagline">Not just to build, but to innovate. Python-powered business tools & resource agency.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-link">IG</a>
+        <a href="#" class="social-link">X</a>
+        <a href="https://wa.me/" class="social-link">WA</a>
+        <a href="#" class="social-link">YT</a>
+        <a href="#" class="social-link">TT</a>
+        <a href="#" class="social-link">GH</a>
+      </div>
+    </div>
+ 
+    <div>
+      <span class="footer-col-title">Quick Links</span>
+      <ul class="footer-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#team">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+ 
+    <div>
+      <span class="footer-col-title">Services</span>
+      <ul class="footer-links">
+        <li><a href="#services">Web Development</a></li>
+        <li><a href="#services">Telegram Bots</a></li>
+        <li><a href="#services">UI/UX Design</a></li>
+        <li><a href="#services">Course Partnerships</a></li>
+        <li><a href="#services">Maintenance & SEO</a></li>
+      </ul>
+    </div>
+ 
+    <div>
+      <span class="footer-col-title">Contact</span>
+      <a href="mailto:webkalhub@gmail.com" class="footer-contact-item">webkalhub@gmail.com</a>
+      <a href="https://t.me/webkal_bot" class="footer-contact-item">Telegram: @webkal_bot</a>
+      <span class="footer-contact-item" style="cursor: default;">Global Remote Team</span>
+      <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+        <a href="#contact" class="btn-primary" style="text-align: center; font-size: 0.65rem;">Hire Us</a>
+        <a href="#portfolio" class="btn-ghost" style="text-align: center; font-size: 0.65rem;">Learning Hub</a>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 WEBKAL. All rights reserved.</p>
+    <p class="footer-love">Built with 💙 by the WEBKAL team</p>
+  </div>
+</footer>
+ 
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let cx = 0, cy = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
+  function animCursor() {
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+    rx += (cx - rx) * 0.12;
+    ry += (cy - ry) * 0.12;
+    cursorRing.style.left = rx + 'px';
+    cursorRing.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '18px';
+      cursor.style.height = '18px';
+      cursorRing.style.width = '50px';
+      cursorRing.style.height = '50px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px';
+      cursor.style.height = '10px';
+      cursorRing.style.width = '36px';
+      cursorRing.style.height = '36px';
+    });
+  });
+ 
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i % 5 * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+ 
+  // FAQ
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+ 
+  // Nav scroll style
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('nav');
+    nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.07)';
+  });
+ 
+  // Hero stagger on load
+  window.addEventListener('load', () => {
+    document.querySelectorAll('#hero .reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), 200 + i * 150);
+    });
+  });
+</script>
+</body>
+</html>
+ 
+
